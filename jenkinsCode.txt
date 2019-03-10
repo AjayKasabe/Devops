@@ -1,0 +1,16 @@
+node {
+   stage('Preparation')
+ {     git changelog: false, credentialsId: 'git', poll: false, url: 'https://github.com/AjayKasabe/centos7docker.git'
+}
+   stage('Preparation-Docker')
+ {     sh '/usr/bin/docker build -t ajaykasabe/centos7docker:NewDocker .'
+}
+stage('Docker-push')
+{
+    withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUsername')]) 
+    {
+        sh '/usr/bin/docker login -u $dockerUsername -p $dockerPassword'
+    }
+    sh '/usr/bin/docker Push ajaykasabe/web1'
+}
+}
